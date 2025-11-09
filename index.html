@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costur Confecções - Sistema de Cálculo</title>
+    <style>
+        :root {
+            --azul-claro: #e6f2ff;
+            --azul-medio: #4da6ff;
+            --azul-escuro: #0066cc;
+            --branco: #ffffff;
+            --cinza-claro: #f5f5f5;
+            --verde: #28a745;
+            --cinza: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--azul-claro);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--azul-medio);
+            color: var(--branco);
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .slogan {
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+        
+        nav {
+            background-color: var(--azul-escuro);
+            padding: 0.8rem 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        nav li {
+            margin: 0 1rem;
+        }
+        
+        nav a {
+            color: var(--branco);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: var(--azul-medio);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .card {
+            background-color: var(--branco);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: var(--azul-escuro);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--azul-claro);
+        }
+        
+        .secao-producao {
+            margin-bottom: 2.5rem;
+        }
+        
+        .secao-producao:last-child {
+            margin-bottom: 0;
+        }
+        
+        .secao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .toggle-punho {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .toggle-btn.ativo {
+            background-color: var(--verde);
+            color: white;
+        }
+        
+        .toggle-btn.inativo {
+            background-color: var(--cinza);
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        th, td {
+            padding: 0.8rem;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--azul-claro);
+            font-weight: 600;
+        }
+        
+        .coluna-oculta {
+            display: none;
+        }
+        
+        input[type="number"] {
+            width: 80px;
+            padding: 0.4rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .resultados {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .resultado-item {
+            background-color: var(--cinza-claro);
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .valor-resultado {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--azul-escuro);
+            margin-top: 0.5rem;
+        }
+        
+        .btn-calcular {
+            background-color: var(--azul-escuro);
+            color: var(--branco);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .btn-calcular:hover {
+            background-color: var(--azul-medio);
+        }
+        
+        footer {
+            background-color: var(--azul-escuro);
+            color: var(--branco);
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .info-punho {
+            font-size: 0.9rem;
+            color: var(--azul-escuro);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        
+        .quantidade-bloqueada {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .resultados-gerais {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--azul-claro);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Costur Confecções</div>
+        <div class="slogan">Sua marca, nossa costura</div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#" class="active" data-section="camisa-gola-careca">Camisa Gola Careca</a></li>
+            <li><a href="#" data-section="camisa-gola-v">Camisa Gola V</a></li>
+            <li><a href="#" data-section="camisa-gola-careca-duplo">Camisa Gola Careca Detalhe Duplo</a></li>
+            <li><a href="#" data-section="proximas-etapas">Próximas Etapas</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <!-- Seção Camisa Gola Careca -->
+        <section id="camisa-gola-careca" class="card">
+            <h2>Camisa Gola Careca</h2>
+            
+            <!-- Gola Careca -->
+            <div class="secao-producao">
+                <div class="secao-header">
+                    <h3>Gola Careca</h3>
+                    <div class="toggle-punho">
+                        <span>Peça tem Punho:</span>
+                        <button class="toggle-btn inativo" id="toggle-punho-careca">Não</button>
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tamanho da Camisa</th>
+                            <th>Quantidade</th>
+                            <th class="coluna-oculta">Gola Careca (cm)</th>
+                            <th class="coluna-oculta">Largura da Ribana (cm)</th>
+                            <th>Tamanho da Ribana (Metro)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gola-careca">
+                        <!-- Linhas serão preenchidas via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total para ser cortado</div>
+                        <div class="valor-resultado" id="total-gola-careca">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.9m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-careca-09">0</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.8m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-careca-08">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Punho -->
+            <div class="secao-producao hidden" id="secao-punho-careca">
+                <div class="secao-header">
+                    <h3>Punho</h3>
+                    <div class="info-punho">
+                        Quantidades sincronizadas com Gola Careca
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tamanho da Camisa</th>
+                            <th>Quantidade</th>
+                            <th class="coluna-oculta">Punho (cm)</th>
+                            <th class="coluna-oculta">Largura da Ribana (cm)</th>
+                            <th>Tamanho da Ribana (Metro)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-punho-careca">
+                        <!-- Linhas serão preenchidas via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total para ser cortado</div>
+                        <div class="valor-resultado" id="total-punho-careca">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.9m)</div>
+                        <div class="valor-resultado" id="corte-ribana-punho-careca-09">0</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.8m)</div>
+                        <div class="valor-resultado" id="corte-ribana-punho-careca-08">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resultados Gerais -->
+            <div class="resultados-gerais">
+                <h3>Resultados Gerais</h3>
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total de corte ribana</div>
+                        <div class="valor-resultado" id="total-corte-ribana-careca">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Total de corte de viés (90cm)</div>
+                        <div class="valor-resultado" id="total-corte-vies-careca-90">0</div>
+                        <div>Unidades</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Total de corte de viés (80cm)</div>
+                        <div class="valor-resultado" id="total-corte-vies-careca-80">0</div>
+                        <div>Unidades</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Camisa Gola V -->
+        <section id="camisa-gola-v" class="card hidden">
+            <h2>Camisa Gola V</h2>
+            
+            <!-- Gola V -->
+            <div class="secao-producao">
+                <div class="secao-header">
+                    <h3>Gola V</h3>
+                    <div class="toggle-punho">
+                        <span>Peça tem Punho:</span>
+                        <button class="toggle-btn inativo" id="toggle-punho-v">Não</button>
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tamanho da Camisa</th>
+                            <th>Quantidade</th>
+                            <th class="coluna-oculta">Gola V (cm)</th>
+                            <th class="coluna-oculta">Largura da Ribana (cm)</th>
+                            <th>Tamanho da Ribana (Metro)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gola-v">
+                        <!-- Linhas serão preenchidas via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total para ser cortado</div>
+                        <div class="valor-resultado" id="total-gola-v">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.9m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-v-09">0</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.8m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-v-08">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Punho Gola V -->
+            <div class="secao-producao hidden" id="secao-punho-v">
+                <div class="secao-header">
+                    <h3>Punho</h3>
+                    <div class="info-punho">
+                        Quantidades sincronizadas com Gola V
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tamanho da Camisa</th>
+                            <th>Quantidade</th>
+                            <th class="coluna-oculta">Punho (cm)</th>
+                            <th class="coluna-oculta">Largura da Ribana (cm)</th>
+                            <th>Tamanho da Ribana (Metro)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-punho-v">
+                        <!-- Linhas serão preenchidas via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total para ser cortado</div>
+                        <div class="valor-resultado" id="total-punho-v">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.9m)</div>
+                        <div class="valor-resultado" id="corte-ribana-punho-v-09">0</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.8m)</div>
+                        <div class="valor-resultado" id="corte-ribana-punho-v-08">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resultados Gerais Gola V -->
+            <div class="resultados-gerais">
+                <h3>Resultados Gerais</h3>
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total de corte ribana</div>
+                        <div class="valor-resultado" id="total-corte-ribana-v">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Total de corte de viés (90cm)</div>
+                        <div class="valor-resultado" id="total-corte-vies-v-90">0</div>
+                        <div>Unidades</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Total de corte de viés (80cm)</div>
+                        <div class="valor-resultado" id="total-corte-vies-v-80">0</div>
+                        <div>Unidades</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Camisa Gola Careca Detalhe Duplo -->
+        <section id="camisa-gola-careca-duplo" class="card hidden">
+            <h2>Camisa Gola Careca Detalhe Duplo</h2>
+            
+            <!-- Gola Careca Duplo - Parte 1 (84%) -->
+            <div class="secao-producao">
+                <div class="secao-header">
+                    <h3>Gola Careca - Parte 1 (84%)</h3>
+                    <div class="toggle-punho">
+                        <span>Peça tem Punho:</span>
+                        <button class="toggle-btn inativo" id="toggle-punho-duplo">Não</button>
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tamanho da Camisa</th>
+                            <th>Quantidade</th>
+                            <th class="coluna-oculta">Gola Careca (cm)</th>
+                            <th class="coluna-oculta">Largura da Ribana (cm)</th>
+                            <th>Tamanho da Ribana (Metro)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gola-duplo-1">
+                        <!-- Linhas serão preenchidas via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total para ser cortado</div>
+                        <div class="valor-resultado" id="total-gola-duplo-1">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.9m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-duplo-1-09">0</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.8m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-duplo-1-08">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gola Careca Duplo - Parte 2 (16%) -->
+            <div class="secao-producao">
+                <div class="secao-header">
+                    <h3>Gola Careca - Parte 2 (16%)</h3>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tamanho da Camisa</th>
+                            <th>Quantidade</th>
+                            <th class="coluna-oculta">Gola Careca (cm)</th>
+                            <th class="coluna-oculta">Largura da Ribana (cm)</th>
+                            <th>Tamanho da Ribana (Metro)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gola-duplo-2">
+                        <!-- Linhas serão preenchidas via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total para ser cortado</div>
+                        <div class="valor-resultado" id="total-gola-duplo-2">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.9m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-duplo-2-09">0</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.8m)</div>
+                        <div class="valor-resultado" id="corte-ribana-gola-duplo-2-08">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Punho Gola Careca Duplo -->
+            <div class="secao-producao hidden" id="secao-punho-duplo">
+                <div class="secao-header">
+                    <h3>Punho</h3>
+                    <div class="info-punho">
+                        Quantidades sincronizadas com Gola Careca Detalhe Duplo
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tamanho da Camisa</th>
+                            <th>Quantidade</th>
+                            <th class="coluna-oculta">Punho (cm)</th>
+                            <th class="coluna-oculta">Largura da Ribana (cm)</th>
+                            <th>Tamanho da Ribana (Metro)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-punho-duplo">
+                        <!-- Linhas serão preenchidas via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total para ser cortado</div>
+                        <div class="valor-resultado" id="total-punho-duplo">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.9m)</div>
+                        <div class="valor-resultado" id="corte-ribana-punho-duplo-09">0</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Quantidade de corte ribana (0.8m)</div>
+                        <div class="valor-resultado" id="corte-ribana-punho-duplo-08">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resultados Gerais Gola Careca Duplo -->
+            <div class="resultados-gerais">
+                <h3>Resultados Gerais</h3>
+                <div class="resultados">
+                    <div class="resultado-item">
+                        <div>Total de corte ribana</div>
+                        <div class="valor-resultado" id="total-corte-ribana-duplo">0</div>
+                        <div>Metros</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Total de corte de viés (90cm)</div>
+                        <div class="valor-resultado" id="total-corte-vies-duplo-90">0</div>
+                        <div>Unidades</div>
+                    </div>
+                    
+                    <div class="resultado-item">
+                        <div>Total de corte de viés (80cm)</div>
+                        <div class="valor-resultado" id="total-corte-vies-duplo-80">0</div>
+                        <div>Unidades</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção Próximas Etapas -->
+        <section id="proximas-etapas" class="card hidden">
+            <h2>Próximas Etapas</h2>
+            <p>Esta área será atualizada conforme você for enviando novos modelos e informações.</p>
+            <p>Para adicionar novas funcionalidades, entre em contato com o desenvolvedor.</p>
+        </section>
+    </div>
+    
+    <footer>
+        <p>Costur Confecções &copy; 2023 - Sua marca, nossa costura</p>
+    </footer>
+
+    <script>
+        // Dados iniciais baseados nas planilhas
+        const tamanhos = ['PP', 'P', 'M', 'G', 'GG', 'EXG'];
+        
+        // Dados Gola Careca
+        const dadosGolaCareca = [
+            { quantidade: 0, medida: 42, larguraRibana: 5 },
+            { quantidade: 0, medida: 44, larguraRibana: 0 },
+            { quantidade: 0, medida: 46, larguraRibana: 0 },
+            { quantidade: 0, medida: 48, larguraRibana: 0 },
+            { quantidade: 0, medida: 50, larguraRibana: 0 },
+            { quantidade: 0, medida: 52, larguraRibana: 0 }
+        ];
+        
+        const dadosPunhoCareca = [
+            { quantidade: 0, medida: 34, larguraRibana: 6 },
+            { quantidade: 0, medida: 36, larguraRibana: 0 },
+            { quantidade: 0, medida: 38, larguraRibana: 0 },
+            { quantidade: 0, medida: 40, larguraRibana: 0 },
+            { quantidade: 0, medida: 42, larguraRibana: 0 },
+            { quantidade: 0, medida: 44, larguraRibana: 0 }
+        ];
+        
+        // Dados Gola V
+        const dadosGolaV = [
+            { quantidade: 0, medida: 51, larguraRibana: 5 },
+            { quantidade: 0, medida: 53, larguraRibana: 0 },
+            { quantidade: 0, medida: 55, larguraRibana: 0 },
+            { quantidade: 0, medida: 57, larguraRibana: 0 },
+            { quantidade: 0, medida: 59, larguraRibana: 0 },
+            { quantidade: 0, medida: 61, larguraRibana: 0 }
+        ];
+        
+        const dadosPunhoV = [
+            { quantidade: 0, medida: 34, larguraRibana: 6 },
+            { quantidade: 0, medida: 36, larguraRibana: 0 },
+            { quantidade: 0, medida: 38, larguraRibana: 0 },
+            { quantidade: 0, medida: 40, larguraRibana: 0 },
+            { quantidade: 0, medida: 42, larguraRibana: 0 },
+            { quantidade: 0, medida: 44, larguraRibana: 0 }
+        ];
+        
+        // Dados Gola Careca Detalhe Duplo
+        const dadosGolaDuplo1 = [
+            { quantidade: 0, medida: 42 * 0.84, larguraRibana: 5 },
+            { quantidade: 0, medida: 44 * 0.84, larguraRibana: 0 },
+            { quantidade: 0, medida: 46 * 0.84, larguraRibana: 0 },
+            { quantidade: 0, medida: 48 * 0.84, larguraRibana: 0 },
+            { quantidade: 0, medida: 50 * 0.84, larguraRibana: 0 },
+            { quantidade: 0, medida: 52 * 0.84, larguraRibana: 0 }
+        ];
+        
+        const dadosGolaDuplo2 = [
+            { quantidade: 0, medida: 42 * 0.16, larguraRibana: 5 },
+            { quantidade: 0, medida: 44 * 0.16, larguraRibana: 0 },
+            { quantidade: 0, medida: 46 * 0.16, larguraRibana: 0 },
+            { quantidade: 0, medida: 48 * 0.16, larguraRibana: 0 },
+            { quantidade: 0, medida: 50 * 0.16, larguraRibana: 0 },
+            { quantidade: 0, medida: 52 * 0.16, larguraRibana: 0 }
+        ];
+        
+        const dadosPunhoDuplo = [
+            { quantidade: 0, medida: 34, larguraRibana: 6 },
+            { quantidade: 0, medida: 36, larguraRibana: 0 },
+            { quantidade: 0, medida: 38, larguraRibana: 0 },
+            { quantidade: 0, medida: 40, larguraRibana: 0 },
+            { quantidade: 0, medida: 42, larguraRibana: 0 },
+            { quantidade: 0, medida: 44, larguraRibana: 0 }
+        ];
+        
+        // Estados dos punhos
+        let punhoCarecaAtivo = false;
+        let punhoVAtivo = false;
+        let punhoDuploAtivo = false;
+        
+        // Preencher tabelas Gola Careca
+        function inicializarGolaCareca() {
+            const tabelaGola = document.getElementById('tabela-gola-careca');
+            tabelaGola.innerHTML = '';
+            
+            tamanhos.forEach((tamanho, index) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${tamanho}</td>
+                    <td><input type="number" value="${dadosGolaCareca[index].quantidade}" data-tipo="quantidade" data-secao="gola-careca" data-tamanho="${index}"></td>
+                    <td class="coluna-oculta">${dadosGolaCareca[index].medida}</td>
+                    <td class="coluna-oculta">${dadosGolaCareca[index].larguraRibana}</td>
+                    <td id="ribana-gola-careca-${index}">0</td>
+                `;
+                tabelaGola.appendChild(linha);
+            });
+            
+            const tabelaPunho = document.getElementById('tabela-punho-careca');
+            tabelaPunho.innerHTML = '';
+            
+            tamanhos.forEach((tamanho, index) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${tamanho}</td>
+                    <td><input type="number" value="${dadosPunhoCareca[index].quantidade}" data-tipo="quantidade" data-secao="punho-careca" data-tamanho="${index}" readonly class="quantidade-bloqueada"></td>
+                    <td class="coluna-oculta">${dadosPunhoCareca[index].medida}</td>
+                    <td class="coluna-oculta">${dadosPunhoCareca[index].larguraRibana}</td>
+                    <td id="ribana-punho-careca-${index}">0</td>
+                `;
+                tabelaPunho.appendChild(linha);
+            });
+        }
+        
+        // Preencher tabelas Gola V
+        function inicializarGolaV() {
+            const tabelaGola = document.getElementById('tabela-gola-v');
+            tabelaGola.innerHTML = '';
+            
+            tamanhos.forEach((tamanho, index) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${tamanho}</td>
+                    <td><input type="number" value="${dadosGolaV[index].quantidade}" data-tipo="quantidade" data-secao="gola-v" data-tamanho="${index}"></td>
+                    <td class="coluna-oculta">${dadosGolaV[index].medida}</td>
+                    <td class="coluna-oculta">${dadosGolaV[index].larguraRibana}</td>
+                    <td id="ribana-gola-v-${index}">0</td>
+                `;
+                tabelaGola.appendChild(linha);
+            });
+            
+            const tabelaPunho = document.getElementById('tabela-punho-v');
+            tabelaPunho.innerHTML = '';
+            
+            tamanhos.forEach((tamanho, index) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${tamanho}</td>
+                    <td><input type="number" value="${dadosPunhoV[index].quantidade}" data-tipo="quantidade" data-secao="punho-v" data-tamanho="${index}" readonly class="quantidade-bloqueada"></td>
+                    <td class="coluna-oculta">${dadosPunhoV[index].medida}</td>
+                    <td class="coluna-oculta">${dadosPunhoV[index].larguraRibana}</td>
+                    <td id="ribana-punho-v-${index}">0</td>
+                `;
+                tabelaPunho.appendChild(linha);
+            });
+        }
+        
+        // Preencher tabelas Gola Careca Detalhe Duplo
+        function inicializarGolaDuplo() {
+            // Parte 1 (84%)
+            const tabelaGola1 = document.getElementById('tabela-gola-duplo-1');
+            tabelaGola1.innerHTML = '';
+            
+            tamanhos.forEach((tamanho, index) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${tamanho}</td>
+                    <td><input type="number" value="${dadosGolaDuplo1[index].quantidade}" data-tipo="quantidade" data-secao="gola-duplo-1" data-tamanho="${index}"></td>
+                    <td class="coluna-oculta">${dadosGolaDuplo1[index].medida.toFixed(2)}</td>
+                    <td class="coluna-oculta">${dadosGolaDuplo1[index].larguraRibana}</td>
+                    <td id="ribana-gola-duplo-1-${index}">0</td>
+                `;
+                tabelaGola1.appendChild(linha);
+            });
+            
+            // Parte 2 (16%)
+            const tabelaGola2 = document.getElementById('tabela-gola-duplo-2');
+            tabelaGola2.innerHTML = '';
+            
+            tamanhos.forEach((tamanho, index) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${tamanho}</td>
+                    <td><input type="number" value="${dadosGolaDuplo2[index].quantidade}" data-tipo="quantidade" data-secao="gola-duplo-2" data-tamanho="${index}" readonly class="quantidade-bloqueada"></td>
+                    <td class="coluna-oculta">${dadosGolaDuplo2[index].medida.toFixed(2)}</td>
+                    <td class="coluna-oculta">${dadosGolaDuplo2[index].larguraRibana}</td>
+                    <td id="ribana-gola-duplo-2-${index}">0</td>
+                `;
+                tabelaGola2.appendChild(linha);
+            });
+            
+            // Punho
+            const tabelaPunho = document.getElementById('tabela-punho-duplo');
+            tabelaPunho.innerHTML = '';
+            
+            tamanhos.forEach((tamanho, index) => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td>${tamanho}</td>
+                    <td><input type="number" value="${dadosPunhoDuplo[index].quantidade}" data-tipo="quantidade" data-secao="punho-duplo" data-tamanho="${index}" readonly class="quantidade-bloqueada"></td>
+                    <td class="coluna-oculta">${dadosPunhoDuplo[index].medida}</td>
+                    <td class="coluna-oculta">${dadosPunhoDuplo[index].larguraRibana}</td>
+                    <td id="ribana-punho-duplo-${index}">0</td>
+                `;
+                tabelaPunho.appendChild(linha);
+            });
+        }
+        
+        // Navegação entre seções
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remover classe active de todos os links
+                document.querySelectorAll('nav a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Adicionar classe active ao link clicado
+                this.classList.add('active');
+                
+                // Ocultar todas as seções
+                document.querySelectorAll('.card').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // Mostrar a seção correspondente
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).classList.remove('hidden');
+            });
+        });
+        
+        // Alternar punho Gola Careca
+        document.getElementById('toggle-punho-careca').addEventListener('click', function() {
+            punhoCarecaAtivo = !punhoCarecaAtivo;
+            const secaoPunho = document.getElementById('secao-punho-careca');
+            
+            if (punhoCarecaAtivo) {
+                this.textContent = 'Sim';
+                this.classList.remove('inativo');
+                this.classList.add('ativo');
+                secaoPunho.classList.remove('hidden');
+                sincronizarQuantidadesCareca();
+            } else {
+                this.textContent = 'Não';
+                this.classList.remove('ativo');
+                this.classList.add('inativo');
+                secaoPunho.classList.add('hidden');
+            }
+            
+            calcularGolaCareca();
+        });
+        
+        // Alternar punho Gola V
+        document.getElementById('toggle-punho-v').addEventListener('click', function() {
+            punhoVAtivo = !punhoVAtivo;
+            const secaoPunho = document.getElementById('secao-punho-v');
+            
+            if (punhoVAtivo) {
+                this.textContent = 'Sim';
+                this.classList.remove('inativo');
+                this.classList.add('ativo');
+                secaoPunho.classList.remove('hidden');
+                sincronizarQuantidadesV();
+            } else {
+                this.textContent = 'Não';
+                this.classList.remove('ativo');
+                this.classList.add('inativo');
+                secaoPunho.classList.add('hidden');
+            }
+            
+            calcularGolaV();
+        });
+        
+        // Alternar punho Gola Careca Detalhe Duplo
+        document.getElementById('toggle-punho-duplo').addEventListener('click', function() {
+            punhoDuploAtivo = !punhoDuploAtivo;
+            const secaoPunho = document.getElementById('secao-punho-duplo');
+            
+            if (punhoDuploAtivo) {
+                this.textContent = 'Sim';
+                this.classList.remove('inativo');
+                this.classList.add('ativo');
+                secaoPunho.classList.remove('hidden');
+                sincronizarQuantidadesDuplo();
+            } else {
+                this.textContent = 'Não';
+                this.classList.remove('ativo');
+                this.classList.add('inativo');
+                secaoPunho.classList.add('hidden');
+            }
+            
+            calcularGolaDuplo();
+        });
+        
+        // Funções de sincronização
+        function sincronizarQuantidadesCareca() {
+            document.querySelectorAll('input[data-secao="gola-careca"][data-tipo="quantidade"]').forEach((input, index) => {
+                const valor = input.value;
+                const inputPunho = document.querySelector(`input[data-secao="punho-careca"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                inputPunho.value = valor;
+            });
+        }
+        
+        function sincronizarQuantidadesV() {
+            document.querySelectorAll('input[data-secao="gola-v"][data-tipo="quantidade"]').forEach((input, index) => {
+                const valor = input.value;
+                const inputPunho = document.querySelector(`input[data-secao="punho-v"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                inputPunho.value = valor;
+            });
+        }
+        
+        function sincronizarQuantidadesDuplo() {
+            document.querySelectorAll('input[data-secao="gola-duplo-1"][data-tipo="quantidade"]').forEach((input, index) => {
+                const valor = input.value;
+                const inputGola2 = document.querySelector(`input[data-secao="gola-duplo-2"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                const inputPunho = document.querySelector(`input[data-secao="punho-duplo"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                inputGola2.value = valor;
+                inputPunho.value = valor;
+            });
+        }
+        
+        // Funções de cálculo
+        function calcularGolaCareca() {
+            let totalGola = 0;
+            tamanhos.forEach((tamanho, index) => {
+                const quantidade = parseInt(document.querySelector(`input[data-secao="gola-careca"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
+                const medida = dadosGolaCareca[index].medida;
+                
+                const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                document.getElementById(`ribana-gola-careca-${index}`).textContent = ribanaMetros.toFixed(2);
+                totalGola += ribanaMetros;
+            });
+            
+            totalGola = totalGola * 1.15;
+            document.getElementById('total-gola-careca').textContent = totalGola.toFixed(2);
+            
+            const corteRibanaGola09 = totalGola / (0.9 * 2);
+            const corteRibanaGola08 = totalGola / (0.8 * 2);
+            
+            document.getElementById('corte-ribana-gola-careca-09').textContent = corteRibanaGola09.toFixed(2);
+            document.getElementById('corte-ribana-gola-careca-08').textContent = corteRibanaGola08.toFixed(2);
+            
+            let totalPunho = 0;
+            if (punhoCarecaAtivo) {
+                tamanhos.forEach((tamanho, index) => {
+                    const quantidade = parseInt(document.querySelector(`input[data-secao="punho-careca"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
+                    const medida = dadosPunhoCareca[index].medida;
+                    
+                    const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                    document.getElementById(`ribana-punho-careca-${index}`).textContent = ribanaMetros.toFixed(2);
+                    totalPunho += ribanaMetros;
+                });
+                
+                totalPunho = totalPunho * 1.15;
+                document.getElementById('total-punho-careca').textContent = totalPunho.toFixed(2);
+                
+                const corteRibanaPunho09 = totalPunho / (0.9 * 2);
+                const corteRibanaPunho08 = totalPunho / (0.8 * 2);
+                
+                document.getElementById('corte-ribana-punho-careca-09').textContent = corteRibanaPunho09.toFixed(2);
+                document.getElementById('corte-ribana-punho-careca-08').textContent = corteRibanaPunho08.toFixed(2);
+            } else {
+                document.getElementById('total-punho-careca').textContent = '0';
+                document.getElementById('corte-ribana-punho-careca-09').textContent = '0';
+                document.getElementById('corte-ribana-punho-careca-08').textContent = '0';
+                
+                tamanhos.forEach((tamanho, index) => {
+                    document.getElementById(`ribana-punho-careca-${index}`).textContent = '0';
+                });
+            }
+            
+            const totalCorteRibana = totalGola + (punhoCarecaAtivo ? totalPunho : 0);
+            const totalCorteVies90 = corteRibanaGola09 + (punhoCarecaAtivo ? parseFloat(document.getElementById('corte-ribana-punho-careca-09').textContent) : 0);
+            const totalCorteVies80 = corteRibanaGola08 + (punhoCarecaAtivo ? parseFloat(document.getElementById('corte-ribana-punho-careca-08').textContent) : 0);
+            
+            document.getElementById('total-corte-ribana-careca').textContent = totalCorteRibana.toFixed(2);
+            document.getElementById('total-corte-vies-careca-90').textContent = totalCorteVies90.toFixed(2);
+            document.getElementById('total-corte-vies-careca-80').textContent = totalCorteVies80.toFixed(2);
+        }
+        
+        function calcularGolaV() {
+            let totalGola = 0;
+            tamanhos.forEach((tamanho, index) => {
+                const quantidade = parseInt(document.querySelector(`input[data-secao="gola-v"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
+                const medida = dadosGolaV[index].medida;
+                
+                const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                document.getElementById(`ribana-gola-v-${index}`).textContent = ribanaMetros.toFixed(2);
+                totalGola += ribanaMetros;
+            });
+            
+            totalGola = totalGola * 1.15;
+            document.getElementById('total-gola-v').textContent = totalGola.toFixed(2);
+            
+            const corteRibanaGola09 = totalGola / (0.9 * 2);
+            const corteRibanaGola08 = totalGola / (0.8 * 2);
+            
+            document.getElementById('corte-ribana-gola-v-09').textContent = corteRibanaGola09.toFixed(2);
+            document.getElementById('corte-ribana-gola-v-08').textContent = corteRibanaGola08.toFixed(2);
+            
+            let totalPunho = 0;
+            if (punhoVAtivo) {
+                tamanhos.forEach((tamanho, index) => {
+                    const quantidade = parseInt(document.querySelector(`input[data-secao="punho-v"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
+                    const medida = dadosPunhoV[index].medida;
+                    
+                    const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                    document.getElementById(`ribana-punho-v-${index}`).textContent = ribanaMetros.toFixed(2);
+                    totalPunho += ribanaMetros;
+                });
+                
+                totalPunho = totalPunho * 1.15;
+                document.getElementById('total-punho-v').textContent = totalPunho.toFixed(2);
+                
+                const corteRibanaPunho09 = totalPunho / (0.9 * 2);
+                const corteRibanaPunho08 = totalPunho / (0.8 * 2);
+                
+                document.getElementById('corte-ribana-punho-v-09').textContent = corteRibanaPunho09.toFixed(2);
+                document.getElementById('corte-ribana-punho-v-08').textContent = corteRibanaPunho08.toFixed(2);
+            } else {
+                document.getElementById('total-punho-v').textContent = '0';
+                document.getElementById('corte-ribana-punho-v-09').textContent = '0';
+                document.getElementById('corte-ribana-punho-v-08').textContent = '0';
+                
+                tamanhos.forEach((tamanho, index) => {
+                    document.getElementById(`ribana-punho-v-${index}`).textContent = '0';
+                });
+            }
+            
+            const totalCorteRibana = totalGola + (punhoVAtivo ? totalPunho : 0);
+            const totalCorteVies90 = corteRibanaGola09 + (punhoVAtivo ? parseFloat(document.getElementById('corte-ribana-punho-v-09').textContent) : 0);
+            const totalCorteVies80 = corteRibanaGola08 + (punhoVAtivo ? parseFloat(document.getElementById('corte-ribana-punho-v-08').textContent) : 0);
+            
+            document.getElementById('total-corte-ribana-v').textContent = totalCorteRibana.toFixed(2);
+            document.getElementById('total-corte-vies-v-90').textContent = totalCorteVies90.toFixed(2);
+            document.getElementById('total-corte-vies-v-80').textContent = totalCorteVies80.toFixed(2);
+        }
+        
+        function calcularGolaDuplo() {
+            // Parte 1 (84%)
+            let totalGola1 = 0;
+            tamanhos.forEach((tamanho, index) => {
+                const quantidade = parseInt(document.querySelector(`input[data-secao="gola-duplo-1"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
+                const medida = dadosGolaDuplo1[index].medida;
+                
+                const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                document.getElementById(`ribana-gola-duplo-1-${index}`).textContent = ribanaMetros.toFixed(2);
+                totalGola1 += ribanaMetros;
+            });
+            
+            totalGola1 = totalGola1 * 1.15;
+            document.getElementById('total-gola-duplo-1').textContent = totalGola1.toFixed(2);
+            
+            const corteRibanaGola109 = totalGola1 / (0.9 * 2);
+            const corteRibanaGola108 = totalGola1 / (0.8 * 2);
+            
+            document.getElementById('corte-ribana-gola-duplo-1-09').textContent = corteRibanaGola109.toFixed(2);
+            document.getElementById('corte-ribana-gola-duplo-1-08').textContent = corteRibanaGola108.toFixed(2);
+            
+            // Parte 2 (16%)
+            let totalGola2 = 0;
+            tamanhos.forEach((tamanho, index) => {
+                const quantidade = parseInt(document.querySelector(`input[data-secao="gola-duplo-2"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
+                const medida = dadosGolaDuplo2[index].medida;
+                
+                const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                document.getElementById(`ribana-gola-duplo-2-${index}`).textContent = ribanaMetros.toFixed(2);
+                totalGola2 += ribanaMetros;
+            });
+            
+            totalGola2 = totalGola2 * 1.15;
+            document.getElementById('total-gola-duplo-2').textContent = totalGola2.toFixed(2);
+            
+            const corteRibanaGola209 = totalGola2 / (0.9 * 2);
+            const corteRibanaGola208 = totalGola2 / (0.8 * 2);
+            
+            document.getElementById('corte-ribana-gola-duplo-2-09').textContent = corteRibanaGola209.toFixed(2);
+            document.getElementById('corte-ribana-gola-duplo-2-08').textContent = corteRibanaGola208.toFixed(2);
+            
+            // Punho
+            let totalPunho = 0;
+            if (punhoDuploAtivo) {
+                tamanhos.forEach((tamanho, index) => {
+                    const quantidade = parseInt(document.querySelector(`input[data-secao="punho-duplo"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
+                    const medida = dadosPunhoDuplo[index].medida;
+                    
+                    const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                    document.getElementById(`ribana-punho-duplo-${index}`).textContent = ribanaMetros.toFixed(2);
+                    totalPunho += ribanaMetros;
+                });
+                
+                totalPunho = totalPunho * 1.15;
+                document.getElementById('total-punho-duplo').textContent = totalPunho.toFixed(2);
+                
+                const corteRibanaPunho09 = totalPunho / (0.9 * 2);
+                const corteRibanaPunho08 = totalPunho / (0.8 * 2);
+                
+                document.getElementById('corte-ribana-punho-duplo-09').textContent = corteRibanaPunho09.toFixed(2);
+                document.getElementById('corte-ribana-punho-duplo-08').textContent = corteRibanaPunho08.toFixed(2);
+            } else {
+                document.getElementById('total-punho-duplo').textContent = '0';
+                document.getElementById('corte-ribana-punho-duplo-09').textContent = '0';
+                document.getElementById('corte-ribana-punho-duplo-08').textContent = '0';
+                
+                tamanhos.forEach((tamanho, index) => {
+                    document.getElementById(`ribana-punho-duplo-${index}`).textContent = '0';
+                });
+            }
+            
+            // Totais gerais
+            const totalCorteRibana = totalGola1 + totalGola2 + (punhoDuploAtivo ? totalPunho : 0);
+            const totalCorteVies90 = corteRibanaGola109 + corteRibanaGola209 + (punhoDuploAtivo ? parseFloat(document.getElementById('corte-ribana-punho-duplo-09').textContent) : 0);
+            const totalCorteVies80 = corteRibanaGola108 + corteRibanaGola208 + (punhoDuploAtivo ? parseFloat(document.getElementById('corte-ribana-punho-duplo-08').textContent) : 0);
+            
+            document.getElementById('total-corte-ribana-duplo').textContent = totalCorteRibana.toFixed(2);
+            document.getElementById('total-corte-vies-duplo-90').textContent = totalCorteVies90.toFixed(2);
+            document.getElementById('total-corte-vies-duplo-80').textContent = totalCorteVies80.toFixed(2);
+        }
+        
+        // Event listeners para inputs
+        function configurarEventListeners() {
+            // Gola Careca
+            document.querySelectorAll('input[data-secao="gola-careca"][data-tipo="quantidade"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    if (punhoCarecaAtivo) {
+                        const index = this.dataset.tamanho;
+                        const inputPunho = document.querySelector(`input[data-secao="punho-careca"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                        inputPunho.value = this.value;
+                    }
+                    calcularGolaCareca();
+                });
+            });
+            
+            // Gola V
+            document.querySelectorAll('input[data-secao="gola-v"][data-tipo="quantidade"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    if (punhoVAtivo) {
+                        const index = this.dataset.tamanho;
+                        const inputPunho = document.querySelector(`input[data-secao="punho-v"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                        inputPunho.value = this.value;
+                    }
+                    calcularGolaV();
+                });
+            });
+            
+            // Gola Careca Detalhe Duplo
+            document.querySelectorAll('input[data-secao="gola-duplo-1"][data-tipo="quantidade"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    if (punhoDuploAtivo) {
+                        const index = this.dataset.tamanho;
+                        const inputGola2 = document.querySelector(`input[data-secao="gola-duplo-2"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                        const inputPunho = document.querySelector(`input[data-secao="punho-duplo"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                        inputGola2.value = this.value;
+                        inputPunho.value = this.value;
+                    }
+                    calcularGolaDuplo();
+                });
+            });
+        }
+        
+        // Inicialização
+        inicializarGolaCareca();
+        inicializarGolaV();
+        inicializarGolaDuplo();
+        configurarEventListeners();
+        calcularGolaCareca();
+        calcularGolaV();
+        calcularGolaDuplo();
+    </script>
+</body>
+</html>
