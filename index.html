@@ -1147,6 +1147,13 @@
         }
         
         function calcularGolaDuplo() {
+            // Sincronizar Parte 2 com Parte 1 (independentemente do punho)
+            document.querySelectorAll('input[data-secao="gola-duplo-1"][data-tipo="quantidade"]').forEach((input, index) => {
+                const valor = input.value;
+                const inputGola2 = document.querySelector(`input[data-secao="gola-duplo-2"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                inputGola2.value = valor;
+            });
+
             // Parte 1 (84%)
             let totalGola1 = 0;
             tamanhos.forEach((tamanho, index) => {
@@ -1190,6 +1197,13 @@
             // Punho
             let totalPunho = 0;
             if (punhoDuploAtivo) {
+                // Sincronizar punho com Parte 1
+                document.querySelectorAll('input[data-secao="gola-duplo-1"][data-tipo="quantidade"]').forEach((input, index) => {
+                    const valor = input.value;
+                    const inputPunho = document.querySelector(`input[data-secao="punho-duplo"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                    inputPunho.value = valor;
+                });
+                
                 tamanhos.forEach((tamanho, index) => {
                     const quantidade = parseInt(document.querySelector(`input[data-secao="punho-duplo"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
                     const medida = dadosPunhoDuplo[index].medida;
@@ -1292,11 +1306,14 @@
             // Gola Careca Detalhe Duplo
             document.querySelectorAll('input[data-secao="gola-duplo-1"][data-tipo="quantidade"]').forEach(input => {
                 input.addEventListener('input', function() {
+                    // Sempre sincronizar Parte 2 com Parte 1
+                    const index = this.dataset.tamanho;
+                    const inputGola2 = document.querySelector(`input[data-secao="gola-duplo-2"][data-tamanho="${index}"][data-tipo="quantidade"]`);
+                    inputGola2.value = this.value;
+                    
+                    // Sincronizar punho apenas se estiver ativo
                     if (punhoDuploAtivo) {
-                        const index = this.dataset.tamanho;
-                        const inputGola2 = document.querySelector(`input[data-secao="gola-duplo-2"][data-tamanho="${index}"][data-tipo="quantidade"]`);
                         const inputPunho = document.querySelector(`input[data-secao="punho-duplo"][data-tamanho="${index}"][data-tipo="quantidade"]`);
-                        inputGola2.value = this.value;
                         inputPunho.value = this.value;
                     }
                     calcularGolaDuplo();
