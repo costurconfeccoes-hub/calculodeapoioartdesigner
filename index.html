@@ -1160,7 +1160,7 @@
                 const quantidade = parseInt(document.querySelector(`input[data-secao="gola-duplo-1"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
                 const medida = dadosGolaDuplo1[index].medida;
                 
-                const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                const ribanaMetros = (((quantidade * medida) * 10) / 1000)+(1/50);
                 document.getElementById(`ribana-gola-duplo-1-${index}`).textContent = ribanaMetros.toFixed(2);
                 totalGola1 += ribanaMetros;
             });
@@ -1180,7 +1180,7 @@
                 const quantidade = parseInt(document.querySelector(`input[data-secao="gola-duplo-2"][data-tamanho="${index}"][data-tipo="quantidade"]`).value) || 0;
                 const medida = dadosGolaDuplo2[index].medida;
                 
-                const ribanaMetros = ((quantidade * medida) * 10) / 1000;
+                const ribanaMetros = (((quantidade * medida) * 10) / 1000)+(1/50);
                 document.getElementById(`ribana-gola-duplo-2-${index}`).textContent = ribanaMetros.toFixed(2);
                 totalGola2 += ribanaMetros;
             });
